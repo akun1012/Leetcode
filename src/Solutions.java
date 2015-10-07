@@ -8,12 +8,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
 
 public class Solutions {
 
+	//Graph node
+	class Node
+    {
+       char data;
+       boolean visited = false;
+       
+       public Node(char c)
+       {
+          this.data=c;
+       }
+    }
+	
 	/**
 	 * Definition for singly-linked list.
 	  */
@@ -65,8 +78,9 @@ public class Solutions {
 	    	bombs[i] = i;
 	    }
 
-	    Collections.shuffle(Arrays.asList(bombs));
-
+	    //Collections.shuffle(Arrays.asList(bombs));
+	    shuffleArray(bombs);
+	    
 	    for(int i = 0; i < numBombs; i++){
 	    	setBoard(board, bombs[i], rows, cols);
 	    }
@@ -80,6 +94,20 @@ public class Solutions {
 	    
 	    board[row][col] = -1;
 	}
+
+	// Implementing Fisher–Yates shuffle
+	  void shuffleArray(int[] ar)
+	  {
+	    Random rnd = new Random();
+	    for (int i = ar.length - 1; i > 0; i--)
+	    {
+	      int index = rnd.nextInt(i + 1);
+	      // Simple swap
+	      int a = ar[index];
+	      ar[index] = ar[i];
+	      ar[i] = a;
+	    }
+	  }
 	
 	/**
 	 * Uber Palindrome
@@ -645,7 +673,7 @@ Input is guaranteed to be within the range from 1 to 3999.
         map.put('C', 100);
         map.put('D', 500);
         map.put('M', 1000);
-        
+        //VI   IV
         int result = map.get(s.charAt(s.length()-1));
         
         for(int i = s.length() - 2; i >= 0; i--){
@@ -1010,8 +1038,6 @@ return "blue is sky the".
         return result.toString();
     }
 	 public static String reverseWords2(String s) {
-		    s = " 1";
-		    s.trim();
 	        String[] stringSplit = s.split(" ");
 	        StringBuffer returnString = new StringBuffer();
 	        for(int i = stringSplit.length-1; i >=0 ; i --){
@@ -1097,8 +1123,8 @@ Some examples:
         }
         
         return stack.pop();
-        
     }
+	
 	/**
 	 * Single Number Total Accepted: 31666 Total Submissions: 69144 My Submissions
 Given an array of integers, every element appears twice except for one. Find that single one.
@@ -1139,9 +1165,9 @@ Your algorithm should have a linear runtime complexity. Could you implement it w
 	 public int maxDepth(TreeNode root) {
         if(root == null){
             return 0;
-        }else{
-            return 1 + Math.max(maxDepth(root.left),maxDepth(root.right));
         }
+        
+        return 1 + Math.max(maxDepth(root.left),maxDepth(root.right));
 	}
 	 
 	 public static int reverse(int x) {
@@ -1345,7 +1371,6 @@ The digits are stored such that the most significant digit is at the head of the
 	        }
 	        return maxSum;
 	    }
-	 
 	 
 	 //ListNode reverse
 	 private ListNode reverse(ListNode head) {
@@ -2226,6 +2251,35 @@ confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on
 	    	return result;
 	    }
 	    
+	    //bfs graph
+	   // http://codereview.stackexchange.com/questions/48518/depth-first-search-breadth-first-search-implementation
+	    public void bfs(Node rootNode)
+	    {
+	    	//BFS uses Queue data structure
+	    	Queue q=new LinkedList();
+	    	q.add(rootNode);
+	    	//printNode(rootNode);
+	    	rootNode.visited=true;
+	    	while(!q.isEmpty())
+	    	{
+	    		Node n=(Node)q.remove();
+	    		Node child=null;
+	    		while((child=getUnvisitedChildNode(n))!=null)
+	    		{
+	    			child.visited=true;
+	    			//printNode(child);
+	    			q.add(child);
+	    		}
+	    	}
+	    	//Clear visited property of nodes
+	    	//clearNodes();
+	    }
+	    
+	    Node getUnvisitedChildNode(Node n){
+	    	//return n.child
+	    	return n;
+	    }
+	    
 	    /**
 	     * Palindrome Number Total Accepted: 20593 Total Submissions: 70923 My Submissions
 Determine whether an integer is a palindrome. Do this without extra space.
@@ -2243,7 +2297,7 @@ There is a more generic way of solving this problem.
 	     * @param args
 	     * @throws IOException
 	     */
-	    public boolean isPalindrome(int x){
+	    public boolean isPalindrome(int x){	
 	    	if(x < 0){
 	    		return false;
 	    	}
@@ -2380,7 +2434,7 @@ Your algorithm should run in O(n) complexity.
 	    	HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
 	    	int maxLength = 1;
 	    	for(int i : num){
-	    		map.put(num[i], 0);
+	    		map.put(i, 0);
 	    	}
 	    	
 	    	for(int i : num){
@@ -2617,7 +2671,7 @@ For example,
 Given [1,3],[2,6],[8,10],[15,18],
 return [1,6],[8,10],[15,18].
 	     */
-	    public List<Interval> merge2(List<Interval> intervals) {
+	    public List<Interval> mergeIntervals(List<Interval> intervals) {
 	        if(intervals == null || intervals.size() < 2){
 	            return intervals;
 	        }
